@@ -8,4 +8,7 @@ Builds cluster group movement chart based on clusterlogs (Get-Cluserlog output)
 
 load in powershell session using .
 for example
+
 PS C:\clusterlogs> . \\vallav1\testshare\Show-ClusterLogResourceMoveChart.ps1
+
+note that space is important between dot and path to ps1 file
