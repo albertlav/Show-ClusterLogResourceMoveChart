@@ -1,4 +1,4 @@
-﻿<#
+<#
 .Synopsis
    Draw cluster group movement Gantt chart using clusterlogs (Get-ClusterLog)
 .DESCRIPTION
@@ -62,7 +62,8 @@ function Show-ClusterLogResourceMoveChart {
             #region Add data to chart 
             $Chart.Series.Clear()
             $logselector="*"
-            if ($DropDown.SelectedIndex -ne 0) {$logselector=$DropDown.SelectedItem}
+            if ($DropDownLogs.SelectedIndex -ne 0) {$logselector=$DropDownLogs.SelectedItem}
+            if ($DropDownGroups.SelectedIndex -ne 0) {$ClusterGroupsToChart=$DropDownGroups.SelectedItem}
             foreach ($keyGroup in $groupMovementData.Keys) {
                 if ($ClusterGroupsToChart.Contains($keyGroup) -or $ClusterGroupsToChart.Count -eq 0) {
                     [void]$Chart.Series.Add($keyGroup)
@@ -137,20 +138,34 @@ function Show-ClusterLogResourceMoveChart {
         $Form.Height = 600 
 
 
-        #region drop down selector
+        #region drop down selectors
 
-        $DropDown = new-object System.Windows.Forms.ComboBox
-        $DropDown.Location = new-object System.Drawing.Size(40, 40)
-        $DropDown.Size = new-object System.Drawing.Size(330, 30)
-        $DropDown.Items.Add("All logs combined")
-        $DropDown.SelectedItem = $DropDown.Items[0]
-        $DropDown.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left 
+        $DropDownLogs = new-object System.Windows.Forms.ComboBox
+        $DropDownLogs.Location = new-object System.Drawing.Size(40, 40)
+        $DropDownLogs.Size = new-object System.Drawing.Size(330, 30)
+        $DropDownLogs.Items.Add("All logs combined")
+        $DropDownLogs.SelectedItem = $DropDownLogs.Items[0]
+        $DropDownLogs.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left 
         ForEach ($Item in $logfiles) {
-            [void] $DropDown.Items.Add($Item)
+            [void] $DropDownLogs.Items.Add($Item)
         }
-        $DropDown.add_SelectedIndexChanged( {AddDataToChartAndRedraw})
-        $Form.Controls.Add($DropDown)
+        $DropDownLogs.add_SelectedIndexChanged( {AddDataToChartAndRedraw})
+        $Form.Controls.Add($DropDownLogs)
 
+
+
+
+        $DropDownGroups = new-object System.Windows.Forms.ComboBox
+        $DropDownGroups.Location = new-object System.Drawing.Size(40, 10)
+        $DropDownGroups.Size = new-object System.Drawing.Size(330, 30)
+        $DropDownGroups.Items.Add("All groups combined")
+        $DropDownGroups.SelectedItem = $DropDownGroups.Items[0]
+        $DropDownGroups.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left 
+        ForEach ($Item in $groupMovementData.Keys) {
+            [void] $DropDownGroups.Items.Add($Item)
+        }
+        $DropDownGroups.add_SelectedIndexChanged( {AddDataToChartAndRedraw})
+        $Form.Controls.Add($DropDownGroups)
 
         #endregion
 
